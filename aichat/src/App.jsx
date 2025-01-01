@@ -2,12 +2,50 @@ import './App.css';
 import logo from './assets/logo.png';
 import avatar from './assets/image.png';
 import { IoMdAdd } from 'react-icons/io';
-import { IoHomeOutline } from 'react-icons/io5';
-import { IoBookmarkOutline } from 'react-icons/io5';
-import { IoDiamondOutline } from 'react-icons/io5';
-import { IoSendSharp } from 'react-icons/io5';
+import {
+  IoHomeOutline,
+  IoBookmarkOutline,
+  IoDiamondOutline,
+  IoSendSharp,
+} from 'react-icons/io5';
+import { sendMessage } from './services/openai';
 
 function App() {
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const chatRef = useRef(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    // Add user message
+    const userMessage = { role: 'user', content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // Get AI response
+      const response = await sendMessage(input);
+      const aiMessage = { role: 'assistant', content: response };
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Failed to get response:', error);
+      // Optionally show error to user
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <div className="App">
       <div className="sidebar">

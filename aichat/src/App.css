@@ -149,7 +149,7 @@ body {
   scroll-behavior: smooth;
   max-width: 70rem;
   height: calc(100vh - 17rem);
-  padding: 2rem 0;
+  padding: 2rem 3rem;
 }
 
 .chats::-webkit-scrollbar {
@@ -183,6 +183,13 @@ body {
   width: 100%;
   padding: 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bot {
+  background: rgba(91, 30, 141, 0.322);
+}
+.bot:hover {
+  background: rgba(175, 102, 235, 0.322);
 }
 
 .inp {
@@ -236,4 +243,28 @@ body {
 .send:hover svg {
   transform: scale(1.1); /* optional: adds a subtle hover effect */
   transition: transform 0.2s ease;
+}
+
+.chat.bot {
+  background: rgba(91, 30, 141, 0.322);
+}
+
+.chat.bot:hover {
+  background: rgba(175, 102, 235, 0.322);
+}
+
+.inp form {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+}
+
+.send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
