@@ -1,13 +1,9 @@
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import logo from './assets/logo.png';
 import avatar from './assets/image.png';
 import { IoMdAdd } from 'react-icons/io';
-import {
-  IoHomeOutline,
-  IoBookmarkOutline,
-  IoDiamondOutline,
-  IoSendSharp,
-} from 'react-icons/io5';
+import { IoHomeOutline, IoBookmarkOutline, IoDiamondOutline, IoSendSharp } from 'react-icons/io5';
 import { sendMessage } from './services/openai';
 
 function App() {
@@ -22,7 +18,7 @@ function App() {
 
     // Add user message
     const userMessage = { role: 'user', content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
@@ -30,7 +26,7 @@ function App() {
       // Get AI response
       const response = await sendMessage(input);
       const aiMessage = { role: 'assistant', content: response };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('Failed to get response:', error);
       // Optionally show error to user
@@ -86,33 +82,36 @@ function App() {
       <div className="main">
         <div className="chats" ref={chatRef}>
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`chat ${message.role === 'assistant' ? 'bot' : ''}`}
-            >
-              <img
-                src={message.role === 'assistant' ? logo : avatar}
-                alt={message.role}
-                className="logo"
+            <div key={index} className={`chat ${message.role === 'assistant' ? 'bot' : ''}`}>
+              <img 
+                src={message.role === 'assistant' ? logo : avatar} 
+                alt={message.role} 
+                className="logo" 
               />
               <p className="txt">{message.content}</p>
-          </div>
+            </div>
           ))}
           {isLoading && (
             <div className="chat bot">
               <img src={logo} alt="ai" className="logo" />
               <p className="txt">Thinking...</p>
-          </div>
+            </div>
           )}
         </div>
 
         <div className="chatFooter">
-          <div className="inp">
-            <input type="text" placeholder="Send a message..." />
-            <button className="send">
+          <form onSubmit={handleSubmit} className="inp">
+            <input
+              type="text"
+              placeholder="Send a message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isLoading}
+            />
+            <button type="submit" className="send" disabled={isLoading || !input.trim()}>
               <IoSendSharp size={24} />
             </button>
-          </div>
+          </form>
           <p>AI Chat may produce inaccurate information.</p>
         </div>
       </div>
